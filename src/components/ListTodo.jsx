@@ -2,7 +2,9 @@ import { useState } from "react";
 import checklist from "../assets/checklist.svg";
 import { MdDateRange } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { updateStatusTask } from "../redux/reducers/todoSlice";
+import { removeTask, updateStatusTask } from "../redux/reducers/todoSlice";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
 
 function ListTodo() {
   // const [todos, setTodos] = useState([]);
@@ -32,6 +34,13 @@ function ItemTodo({index, todo}) {
     setChecked(!checked);
     console.log("after", id)
   };
+  const handleEdit = (id) => {
+    console.log("edit", id)
+  }
+  const handleDelete = (id) => {
+    dispatch(removeTask(id))
+  }
+
   return (
     <li
       className={`bg-white/20 flex justify-between items-center p-3 rounded-lg gap-5 cursor-pointer ${checked && "opacity-50"}`}
@@ -48,7 +57,13 @@ function ItemTodo({index, todo}) {
       >
         {todo.task}
       </p>
-      <small className="flex gap-2 items-center"><MdDateRange /> {new Date().toLocaleDateString('id-ID')}</small>
+      <div className="flex gap-2 group">
+        <small className="flex gap-2 group-hover:hidden items-center w-20"><MdDateRange /> {new Date().toLocaleDateString('id-ID')}</small>
+        <div className="group-hover:flex hidden w-20 justify-end gap-2">
+          <button type="button" onClick={() => handleEdit(todo.id)} className="text-xl cursor-pointer hover:text-blue-500"><FaRegEdit /></button>
+          <button type="button" onClick={() => handleDelete(todo.id)}><MdDeleteOutline className="text-xl cursor-pointer hover:text-red-500" /></button>
+        </div>
+      </div>
     </li>
   );
 }
