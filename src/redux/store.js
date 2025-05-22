@@ -1,10 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import todoSlice from "./reducers/todoSlice";
+import reducer from "./reducers"
+import { persistStore }  from "redux-persist";
 
-const store = configureStore({
-  reducer: {
-    todoSlice
-  },
+
+export const store = configureStore({
+  reducer,
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST"],
+
+      }
+    });
+  }
 });
 
-export default store;
+export const persistor = persistStore(store);
