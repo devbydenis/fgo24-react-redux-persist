@@ -1,12 +1,14 @@
-import {useContext, useState} from "react";
+import { useState } from "react";
 import checklist from "../assets/checklist.svg";
-import TodoContext from "../context/TodoContext";
 import { MdDateRange } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 
 function ListTodo() {
-  const {todoList} = useContext(TodoContext);
+  // const [todos, setTodos] = useState([]);
+  const todoList = useSelector((state) => state).todoSlice.todoList;
 
+  console.log(todoList);
   return (
     <div className="mt-5">
       <h2>To Do</h2>
