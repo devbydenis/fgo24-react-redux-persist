@@ -1,17 +1,17 @@
 import {useForm} from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { addTodo } from "../redux/reducers/todoSlice";
+import { addTask } from "../redux/reducers/todoSlice";
 
 function InputTodo() {
   const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
 
   return (
-    <form onSubmit={ handleSubmit((data) => dispatch(addTodo(data)))}>
+    <form onSubmit={ handleSubmit((data) => dispatch(addTask({...data, isDone: false})))}>
       <div className="flex justify-between mt-5 p-3 bg-indigo-900 rounded-full">
         <input
           className="px-4 py-2 rounded-full w-full outline-none"
-          {...register("todo")}
+          {...register("task")}
           type="text"
           placeholder="Add Item"
         />
