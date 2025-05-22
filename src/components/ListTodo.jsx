@@ -66,12 +66,11 @@ function ItemTodo({index, todo}) {
     <li
       className={`bg-white/20 flex justify-between items-center p-3 rounded-lg gap-5 cursor-pointer ${checked && "opacity-50"}`}
       key={index}
-      onClick={() => handleClick(todo.id)}
     >
       {
       checked 
-        ? <img src={checklist} alt="checklist" />
-        : <div className="bg-white p-3 rounded-full"></div>
+        ? (<span onClick={() => handleClick(todo.id)}><img src={checklist} alt="checklist" /></span>)
+        : (<div className="bg-white p-3 rounded-full" onClick={() => handleClick(todo.id)}></div>)
       }
       <p
         className={`tracking-wider ${checked && "line-through text-gray-300"}`}
