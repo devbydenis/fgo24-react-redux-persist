@@ -2,9 +2,11 @@ import { useState } from "react";
 import checklist from "../assets/checklist.svg";
 import { MdDateRange } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { removeTask, updateStatusTask } from "../redux/reducers/todoSlice";
+import { removeTask, updateStatusTask, editTask } from "../redux/reducers/todoSlice";
 import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdCancel } from "react-icons/md";
+import { LiaSave } from "react-icons/lia";
+import { useForm } from "react-hook-form";
 
 function ListTodo() {
   // const [todos, setTodos] = useState([]);
@@ -25,20 +27,39 @@ function ListTodo() {
 }
 
 function ItemTodo({index, todo}) {
+  const { register, handleSubmit } = useForm();
   const [checked, setChecked] = useState(false);
   const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleClick = (id) => {
-    console.log("before", id)
     dispatch(updateStatusTask(id))
     setChecked(!checked);
-    console.log("after", id)
   };
-  const handleEdit = (id) => {
-    console.log("edit", id)
+  const triggerEdit = () => {
+    setIsEditing(!isEditing)
+  }
+  const handleEdit = (data) => {
+    console.log("data after edit:", data);
+
+    dispatch(editTask({id: todo.id, newTask: data.newTask}))
+
+    triggerEdit()
   }
   const handleDelete = (id) => {
     dispatch(removeTask(id))
+  }
+
+  if (isEditing) {
+    return (
+      <form onSubmit={handleSubmit((data) => handleEdit(data))} className="border relative z-10 bg-white/20 flex justify-center items-center p-3 rounded-lg gap-5 cursor-pointer">
+        <input type="text" {...register("newTask")} placeholder={todo.task} className="flex-3 focus:outline-none border-b-2"/>
+        <div className="flex gap-1">
+          <button type="submit" className="flex-1 text-lg hover:text-green-500 rounded-xl px-2 py-1 cursor-pointer"><LiaSave /></button>
+          <button onClick={() => triggerEdit()} type="click" className="flex-1 text-lg hover:text-red-500 rounded-xl px-2 py-1 cursor-pointer"><MdCancel /></button>
+        </div>
+      </form>
+    )
   }
 
   return (
@@ -60,12 +81,14 @@ function ItemTodo({index, todo}) {
       <div className="flex gap-2 group">
         <small className="flex gap-2 group-hover:hidden items-center w-20"><MdDateRange /> {new Date().toLocaleDateString('id-ID')}</small>
         <div className="group-hover:flex hidden w-20 justify-end gap-2">
-          <button type="button" onClick={() => handleEdit(todo.id)} className="text-xl cursor-pointer hover:text-blue-500"><FaRegEdit /></button>
+          <button type="button" onClick={() => triggerEdit()} className="text-xl cursor-pointer hover:text-blue-500"><FaRegEdit /></button>
           <button type="button" onClick={() => handleDelete(todo.id)}><MdDeleteOutline className="text-xl cursor-pointer hover:text-red-500" /></button>
         </div>
       </div>
     </li>
   );
 }
+
+
 
 export default ListTodo;
